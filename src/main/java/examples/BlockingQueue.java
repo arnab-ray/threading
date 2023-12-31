@@ -9,13 +9,9 @@ public class BlockingQueue<T> {
 
     private final int limit = 10;
 
-    public synchronized void put(T item) {
+    public synchronized void put(T item) throws InterruptedException {
         while (queue.size() == limit) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                System.out.println(e.getCause() + " : " + e.getMessage());
-            }
+            wait();
         }
         if (queue.isEmpty()) {
             notifyAll();
@@ -25,11 +21,7 @@ public class BlockingQueue<T> {
 
     public synchronized T take() throws InterruptedException {
         while (queue.isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                System.out.println(e.getCause() + " : " + e.getMessage());
-            }
+            wait();
         }
         if (queue.size() == limit) {
             notifyAll();
